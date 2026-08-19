@@ -10,7 +10,7 @@ DATA_KEY_FIELDS = ["sdc_id", "device_serial_number", "mrc_no"]
 PASSWORD_KEY_FIELDS = ["cmc_key", "intrl_key", "sign_key"]
 
 
-class ETIMSSettings(Document):
+class eTIMSSettings(Document):
 	def validate(self):
 		self.normalize_key_fields()
 
