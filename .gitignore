@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Frappe/bench artifacts that shouldn't live in the app repo
+*.log
+.frappe
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Never commit real site config or credentials
+site_config.json
+*.pem
+*.key

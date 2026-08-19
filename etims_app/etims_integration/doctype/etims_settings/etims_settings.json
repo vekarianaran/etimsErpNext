@@ -1,0 +1,304 @@
+{
+ "actions": [],
+ "creation": "2026-08-18 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "System",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_mode",
+  "is_enabled",
+  "environment",
+  "device_mode",
+  "section_taxpayer",
+  "kra_pin",
+  "sdc_id",
+  "column_break_taxpayer",
+  "branch_id",
+  "device_serial_number",
+  "mrc_no",
+  "section_api",
+  "sandbox_base_url",
+  "production_base_url",
+  "column_break_api",
+  "client_id",
+  "api_key",
+  "api_secret",
+  "control_unit_pin",
+  "cached_auth_token",
+  "token_expires_at",
+  "section_signing_keys",
+  "cmc_key",
+  "intrl_key",
+  "sign_key",
+  "section_keystore",
+  "key_input_format",
+  "aes_key",
+  "column_break_keystore",
+  "keystore_alias",
+  "keystore_password",
+  "section_retry",
+  "max_retry_attempts",
+  "backoff_strategy",
+  "column_break_retry",
+  "backoff_multiplier",
+  "max_backoff_minutes",
+  "section_behavior",
+  "auto_submit_sales_invoices",
+  "auto_submit_items"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_mode",
+   "fieldtype": "Section Break",
+   "label": "Mode"
+  },
+  {
+   "default": "0",
+   "description": "Master kill switch for eTIMS integration. When unchecked, no documents should be auto-submitted to KRA eTIMS (enforced by hook/queue logic elsewhere, not by this field alone).",
+   "fieldname": "is_enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "default": "Sandbox",
+   "fieldname": "environment",
+   "fieldtype": "Select",
+   "label": "Environment",
+   "options": "Sandbox\nProduction",
+   "reqd": 1
+  },
+  {
+   "description": "KRA eTIMS device type: OSCU (Online Sales Control Unit) or VSCU (Virtual Sales Control Unit). Confirm which mode applies to this taxpayer with the etims-integration-specialist.",
+   "fieldname": "device_mode",
+   "fieldtype": "Select",
+   "label": "Device Mode",
+   "options": "OSCU\nVSCU"
+  },
+  {
+   "fieldname": "section_taxpayer",
+   "fieldtype": "Section Break",
+   "label": "Taxpayer / Branch"
+  },
+  {
+   "description": "KRA-issued taxpayer PIN (eTIMS `tin`).",
+   "fieldname": "kra_pin",
+   "fieldtype": "Data",
+   "label": "KRA PIN (TIN)"
+  },
+  {
+   "description": "SDC ID / CU ID for this device (eTIMS `sdcId`). May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "fieldname": "sdc_id",
+   "fieldtype": "Data",
+   "label": "SDC ID (CU ID)"
+  },
+  {
+   "fieldname": "column_break_taxpayer",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "KRA-assigned branch/office identifier for this business location (eTIMS `bhfId`).",
+   "fieldname": "branch_id",
+   "fieldtype": "Data",
+   "label": "Branch ID (bhfId)"
+  },
+  {
+   "description": "Serial number of the registered OSCU/VSCU control unit device (eTIMS `dvcSrlNo`). May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "fieldname": "device_serial_number",
+   "fieldtype": "Data",
+   "label": "Device Serial Number (dvcSrlNo)"
+  },
+  {
+   "description": "MRC number for this device (eTIMS `mrcNo`). May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "fieldname": "mrc_no",
+   "fieldtype": "Data",
+   "label": "MRC No"
+  },
+  {
+   "fieldname": "section_api",
+   "fieldtype": "Section Break",
+   "label": "API Connection"
+  },
+  {
+   "depends_on": "eval:doc.environment==\"Sandbox\"",
+   "description": "Base URL for the KRA eTIMS sandbox/test API environment. Only used while Environment is set to Sandbox.",
+   "fieldname": "sandbox_base_url",
+   "fieldtype": "Data",
+   "label": "Sandbox Base URL"
+  },
+  {
+   "depends_on": "eval:doc.environment==\"Production\"",
+   "description": "Base URL for the live KRA eTIMS production API environment. Only used while Environment is set to Production.",
+   "fieldname": "production_base_url",
+   "fieldtype": "Data",
+   "label": "Production Base URL"
+  },
+  {
+   "fieldname": "column_break_api",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "client_id",
+   "fieldtype": "Data",
+   "label": "Client ID"
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Data",
+   "label": "API Key"
+  },
+  {
+   "description": "OAuth/API secret used to authenticate with KRA eTIMS. Stored encrypted via Frappe's Password fieldtype.",
+   "fieldname": "api_secret",
+   "fieldtype": "Password",
+   "label": "API Secret"
+  },
+  {
+   "description": "PIN for the control unit, stored encrypted. Confirm with the etims-integration-specialist whether/how KRA requires this for OSCU/VSCU signing.",
+   "fieldname": "control_unit_pin",
+   "fieldtype": "Password",
+   "label": "Control Unit PIN"
+  },
+  {
+   "description": "Cached bearer/auth token returned by the KRA eTIMS auth endpoint, stored encrypted so requests can reuse it instead of re-authenticating every call.",
+   "fieldname": "cached_auth_token",
+   "fieldtype": "Password",
+   "label": "Cached Auth Token"
+  },
+  {
+   "description": "Expiry timestamp of the cached auth token. Used to decide whether to refresh the token before the next API call.",
+   "fieldname": "token_expires_at",
+   "fieldtype": "Datetime",
+   "label": "Token Expires At"
+  },
+  {
+   "fieldname": "section_signing_keys",
+   "fieldtype": "Section Break",
+   "label": "eTIMS Signing Keys"
+  },
+  {
+   "description": "Communication key (eTIMS `cmcKey`) used to secure device communication with KRA eTIMS. Stored encrypted. May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "fieldname": "cmc_key",
+   "fieldtype": "Password",
+   "label": "CMC Key"
+  },
+  {
+   "description": "Interchange key (eTIMS `intrlKey`). Stored encrypted. May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "fieldname": "intrl_key",
+   "fieldtype": "Password",
+   "label": "Interchange Key"
+  },
+  {
+   "description": "Signing key (eTIMS `signKey`) used to sign invoice payloads. Stored encrypted. May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "fieldname": "sign_key",
+   "fieldtype": "Password",
+   "label": "Sign Key"
+  },
+  {
+   "fieldname": "section_keystore",
+   "fieldtype": "Section Break",
+   "label": "Keystore (Decrypt / Encrypt)"
+  },
+  {
+   "default": "Decrypted (Plaintext)",
+   "description": "Whether SDC ID, Device Serial Number, MRC No, CMC Key, Interchange Key, and Sign Key above were just entered as plaintext or as AES/Base64-encrypted blobs. On save, Encrypted values are decrypted using the AES Key below and stored as plaintext; this field then resets to Decrypted.",
+   "fieldname": "key_input_format",
+   "fieldtype": "Select",
+   "label": "Key Input Format",
+   "options": "Decrypted (Plaintext)\nEncrypted (AES/Base64)"
+  },
+  {
+   "description": "AES-128 key (hex) used to decrypt/encrypt the values above (scheme: AES/ECB/PKCS5Padding, Base64). Required only when Key Input Format is Encrypted. Stored encrypted.",
+   "fieldname": "aes_key",
+   "fieldtype": "Password",
+   "label": "AES Key",
+   "mandatory_depends_on": "eval:doc.key_input_format==\"Encrypted (AES/Base64)\""
+  },
+  {
+   "fieldname": "column_break_keystore",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Reference only — JCEKS keystore alias the AES key was sourced from. Not used directly by this app's AES/ECB decrypt routine.",
+   "fieldname": "keystore_alias",
+   "fieldtype": "Data",
+   "label": "Keystore Alias"
+  },
+  {
+   "description": "Reference only — JCEKS keystore/key password, if the keystore file itself is ever loaded directly rather than via the raw AES Key above. Stored encrypted.",
+   "fieldname": "keystore_password",
+   "fieldtype": "Password",
+   "label": "Keystore Password"
+  },
+  {
+   "fieldname": "section_retry",
+   "fieldtype": "Section Break",
+   "label": "Retry / Backoff"
+  },
+  {
+   "default": "5",
+   "fieldname": "max_retry_attempts",
+   "fieldtype": "Int",
+   "label": "Max Retry Attempts"
+  },
+  {
+   "default": "Fixed",
+   "fieldname": "backoff_strategy",
+   "fieldtype": "Select",
+   "label": "Backoff Strategy",
+   "options": "Fixed\nExponential"
+  },
+  {
+   "fieldname": "column_break_retry",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.backoff_strategy==\"Exponential\"",
+   "fieldname": "backoff_multiplier",
+   "fieldtype": "Float",
+   "label": "Backoff Multiplier"
+  },
+  {
+   "fieldname": "max_backoff_minutes",
+   "fieldtype": "Int",
+   "label": "Max Backoff (Minutes)"
+  },
+  {
+   "fieldname": "section_behavior",
+   "fieldtype": "Section Break",
+   "label": "Behavior"
+  },
+  {
+   "default": "1",
+   "description": "When enabled (and Enabled is checked), submitted Sales Invoices are automatically queued for submission to KRA eTIMS.",
+   "fieldname": "auto_submit_sales_invoices",
+   "fieldtype": "Check",
+   "label": "Auto-Submit Sales Invoices"
+  },
+  {
+   "default": "1",
+   "description": "When enabled (and Enabled is checked), new/updated Items are automatically queued for registration with KRA eTIMS.",
+   "fieldname": "auto_submit_items",
+   "fieldtype": "Check",
+   "label": "Auto-Submit Items"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-18 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "eTIMS Integration",
+ "name": "eTIMS Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

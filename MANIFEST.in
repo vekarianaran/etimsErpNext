@@ -1,0 +1,17 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.txt
+recursive-include etims_app *.css
+recursive-include etims_app *.csv
+recursive-include etims_app *.html
+recursive-include etims_app *.ico
+recursive-include etims_app *.js
+recursive-include etims_app *.json
+recursive-include etims_app *.md
+recursive-include etims_app *.png
+recursive-include etims_app *.py
+recursive-include etims_app *.svg
+recursive-include etims_app *.txt
+recursive-exclude etims_app *.pyc

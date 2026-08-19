@@ -1,0 +1,21 @@
+[project]
+name = "etims_app"
+authors = [
+    { name = "Aaron Vekaria", email = "vekarianaran@gmail.com" }
+]
+description = "ERPNext integration with Kenya Revenue Authority's eTIMS (Electronic Tax Invoice Management System)"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = [
+    # frappe is provided by the bench environment; add eTIMS-specific
+    # dependencies here as the integration takes shape (e.g. requests
+    # for API calls).
+    "cryptography",
+]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.bench.dev-dependencies]
