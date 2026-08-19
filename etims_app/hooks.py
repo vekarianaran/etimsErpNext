@@ -2,7 +2,7 @@ from . import __version__ as app_version
 
 app_name = "etims_app"
 app_title = "eTIMS Integration"
-app_publisher = "Aaron Vekaria"
+app_publisher = "Naran Vekaria"
 app_description = "ERPNext integration with Kenya Revenue Authority's eTIMS"
 app_email = "vekarianaran@gmail.com"
 app_license = "mit"

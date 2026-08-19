@@ -1,7 +1,7 @@
 [project]
 name = "etims_app"
 authors = [
-    { name = "Aaron Vekaria", email = "vekarianaran@gmail.com" }
+    { name = "Naran Vekaria", email = "vekarianaran@gmail.com" }
 ]
 description = "ERPNext integration with Kenya Revenue Authority's eTIMS (Electronic Tax Invoice Management System)"
 requires-python = ">=3.10"
