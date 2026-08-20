@@ -8,14 +8,24 @@
   "section_mode",
   "is_enabled",
   "environment",
-  "device_mode",
   "section_taxpayer",
   "kra_pin",
-  "sdc_id",
   "column_break_taxpayer",
   "branch_id",
+  "section_encrypted_values",
+  "sdc_id",
   "device_serial_number",
   "mrc_no",
+  "cmc_key",
+  "intrl_key",
+  "sign_key",
+  "column_break_encrypted_values",
+  "sdc_id_encrypted",
+  "device_serial_number_encrypted",
+  "mrc_no_encrypted",
+  "cmc_key_encrypted",
+  "intrl_key_encrypted",
+  "sign_key_encrypted",
   "section_api",
   "sandbox_base_url",
   "production_base_url",
@@ -26,16 +36,8 @@
   "control_unit_pin",
   "cached_auth_token",
   "token_expires_at",
-  "section_signing_keys",
-  "cmc_key",
-  "intrl_key",
-  "sign_key",
-  "section_keystore",
-  "key_input_format",
+  "section_encryption",
   "aes_key",
-  "column_break_keystore",
-  "keystore_alias",
-  "keystore_password",
   "section_retry",
   "max_retry_attempts",
   "backoff_strategy",
@@ -68,13 +70,6 @@
    "reqd": 1
   },
   {
-   "description": "KRA eTIMS device type: OSCU (Online Sales Control Unit) or VSCU (Virtual Sales Control Unit). Confirm which mode applies to this taxpayer with the etims-integration-specialist.",
-   "fieldname": "device_mode",
-   "fieldtype": "Select",
-   "label": "Device Mode",
-   "options": "OSCU\nVSCU"
-  },
-  {
    "fieldname": "section_taxpayer",
    "fieldtype": "Section Break",
    "label": "Taxpayer / Branch"
@@ -84,12 +79,6 @@
    "fieldname": "kra_pin",
    "fieldtype": "Data",
    "label": "KRA PIN (TIN)"
-  },
-  {
-   "description": "SDC ID / CU ID for this device (eTIMS `sdcId`). May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
-   "fieldname": "sdc_id",
-   "fieldtype": "Data",
-   "label": "SDC ID (CU ID)"
   },
   {
    "fieldname": "column_break_taxpayer",
@@ -102,16 +91,85 @@
    "label": "Branch ID (bhfId)"
   },
   {
-   "description": "Serial number of the registered OSCU/VSCU control unit device (eTIMS `dvcSrlNo`). May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
-   "fieldname": "device_serial_number",
-   "fieldtype": "Data",
-   "label": "Device Serial Number (dvcSrlNo)"
+   "fieldname": "section_encrypted_values",
+   "fieldtype": "Section Break",
+   "label": "Device & Signing Values (Decrypted / Encrypted)"
   },
   {
-   "description": "MRC number for this device (eTIMS `mrcNo`). May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
+   "description": "SDC ID / CU ID for this device (eTIMS `sdcId`), decrypted/plaintext. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "fieldname": "sdc_id",
+   "fieldtype": "Data",
+   "label": "SDC ID (CU ID) — Decrypted"
+  },
+  {
+   "description": "Serial number of the registered control unit device (eTIMS `dvcSrlNo`), decrypted/plaintext. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "fieldname": "device_serial_number",
+   "fieldtype": "Data",
+   "label": "Device Serial Number (dvcSrlNo) — Decrypted"
+  },
+  {
+   "description": "MRC number for this device (eTIMS `mrcNo`), decrypted/plaintext. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
    "fieldname": "mrc_no",
    "fieldtype": "Data",
-   "label": "MRC No"
+   "label": "MRC No — Decrypted"
+  },
+  {
+   "description": "Communication key (eTIMS `cmcKey`) used to secure device communication with KRA eTIMS, decrypted/plaintext. Stored encrypted at rest. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "fieldname": "cmc_key",
+   "fieldtype": "Password",
+   "label": "CMC Key — Decrypted"
+  },
+  {
+   "description": "Interchange key (eTIMS `intrlKey`), decrypted/plaintext. Stored encrypted at rest. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "fieldname": "intrl_key",
+   "fieldtype": "Password",
+   "label": "Interchange Key — Decrypted"
+  },
+  {
+   "description": "Signing key (eTIMS `signKey`) used to sign invoice payloads, decrypted/plaintext. Stored encrypted at rest. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "fieldname": "sign_key",
+   "fieldtype": "Password",
+   "label": "Sign Key — Decrypted"
+  },
+  {
+   "fieldname": "column_break_encrypted_values",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "SDC ID / CU ID as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
+   "fieldname": "sdc_id_encrypted",
+   "fieldtype": "Data",
+   "label": "SDC ID (CU ID) — Encrypted"
+  },
+  {
+   "description": "Device serial number as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
+   "fieldname": "device_serial_number_encrypted",
+   "fieldtype": "Data",
+   "label": "Device Serial Number (dvcSrlNo) — Encrypted"
+  },
+  {
+   "description": "MRC number as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
+   "fieldname": "mrc_no_encrypted",
+   "fieldtype": "Data",
+   "label": "MRC No — Encrypted"
+  },
+  {
+   "description": "CMC Key as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
+   "fieldname": "cmc_key_encrypted",
+   "fieldtype": "Password",
+   "label": "CMC Key — Encrypted"
+  },
+  {
+   "description": "Interchange Key as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
+   "fieldname": "intrl_key_encrypted",
+   "fieldtype": "Password",
+   "label": "Interchange Key — Encrypted"
+  },
+  {
+   "description": "Sign Key as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
+   "fieldname": "sign_key_encrypted",
+   "fieldtype": "Password",
+   "label": "Sign Key — Encrypted"
   },
   {
    "fieldname": "section_api",
@@ -153,7 +211,7 @@
    "label": "API Secret"
   },
   {
-   "description": "PIN for the control unit, stored encrypted. Confirm with the etims-integration-specialist whether/how KRA requires this for OSCU/VSCU signing.",
+   "description": "PIN for the control unit, stored encrypted.",
    "fieldname": "control_unit_pin",
    "fieldtype": "Password",
    "label": "Control Unit PIN"
@@ -171,63 +229,15 @@
    "label": "Token Expires At"
   },
   {
-   "fieldname": "section_signing_keys",
+   "fieldname": "section_encryption",
    "fieldtype": "Section Break",
-   "label": "eTIMS Signing Keys"
+   "label": "Encryption Key"
   },
   {
-   "description": "Communication key (eTIMS `cmcKey`) used to secure device communication with KRA eTIMS. Stored encrypted. May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
-   "fieldname": "cmc_key",
-   "fieldtype": "Password",
-   "label": "CMC Key"
-  },
-  {
-   "description": "Interchange key (eTIMS `intrlKey`). Stored encrypted. May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
-   "fieldname": "intrl_key",
-   "fieldtype": "Password",
-   "label": "Interchange Key"
-  },
-  {
-   "description": "Signing key (eTIMS `signKey`) used to sign invoice payloads. Stored encrypted. May be entered as plaintext or as an AES/Base64-encrypted blob — see Key Input Format below.",
-   "fieldname": "sign_key",
-   "fieldtype": "Password",
-   "label": "Sign Key"
-  },
-  {
-   "fieldname": "section_keystore",
-   "fieldtype": "Section Break",
-   "label": "Keystore (Decrypt / Encrypt)"
-  },
-  {
-   "default": "Decrypted (Plaintext)",
-   "description": "Whether SDC ID, Device Serial Number, MRC No, CMC Key, Interchange Key, and Sign Key above were just entered as plaintext or as AES/Base64-encrypted blobs. On save, Encrypted values are decrypted using the AES Key below and stored as plaintext; this field then resets to Decrypted.",
-   "fieldname": "key_input_format",
-   "fieldtype": "Select",
-   "label": "Key Input Format",
-   "options": "Decrypted (Plaintext)\nEncrypted (AES/Base64)"
-  },
-  {
-   "description": "AES-128 key (hex) used to decrypt/encrypt the values above (scheme: AES/ECB/PKCS5Padding, Base64). Required only when Key Input Format is Encrypted. Stored encrypted.",
+   "description": "AES-128 key (hex) used to decrypt/encrypt the SDC ID, Device Serial Number, MRC No, CMC Key, Interchange Key, and Sign Key pairs above (scheme: AES/ECB/PKCS5Padding, Base64). Required whenever one of those pairs needs syncing on save. Stored encrypted.",
    "fieldname": "aes_key",
    "fieldtype": "Password",
-   "label": "AES Key",
-   "mandatory_depends_on": "eval:doc.key_input_format==\"Encrypted (AES/Base64)\""
-  },
-  {
-   "fieldname": "column_break_keystore",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "Reference only — JCEKS keystore alias the AES key was sourced from. Not used directly by this app's AES/ECB decrypt routine.",
-   "fieldname": "keystore_alias",
-   "fieldtype": "Data",
-   "label": "Keystore Alias"
-  },
-  {
-   "description": "Reference only — JCEKS keystore/key password, if the keystore file itself is ever loaded directly rather than via the raw AES Key above. Stored encrypted.",
-   "fieldname": "keystore_password",
-   "fieldtype": "Password",
-   "label": "Keystore Password"
+   "label": "AES Key"
   },
   {
    "fieldname": "section_retry",
