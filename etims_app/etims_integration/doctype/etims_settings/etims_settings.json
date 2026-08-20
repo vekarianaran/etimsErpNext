@@ -114,21 +114,21 @@
    "label": "MRC No — Decrypted"
   },
   {
-   "description": "Communication key (eTIMS `cmcKey`) used to secure device communication with KRA eTIMS, decrypted/plaintext. Stored encrypted at rest. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "description": "Communication key (eTIMS `cmcKey`) used to secure device communication with KRA eTIMS, decrypted/plaintext. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
    "fieldname": "cmc_key",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "CMC Key — Decrypted"
   },
   {
-   "description": "Interchange key (eTIMS `intrlKey`), decrypted/plaintext. Stored encrypted at rest. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "description": "Interchange key (eTIMS `intrlKey`), decrypted/plaintext. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
    "fieldname": "intrl_key",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "Interchange Key — Decrypted"
   },
   {
-   "description": "Signing key (eTIMS `signKey`) used to sign invoice payloads, decrypted/plaintext. Stored encrypted at rest. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
+   "description": "Signing key (eTIMS `signKey`) used to sign invoice payloads, decrypted/plaintext. Fill in either this or the matching Encrypted field on the right — saving fills in the other one automatically.",
    "fieldname": "sign_key",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "Sign Key — Decrypted"
   },
   {
@@ -156,19 +156,19 @@
   {
    "description": "CMC Key as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
    "fieldname": "cmc_key_encrypted",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "CMC Key — Encrypted"
   },
   {
    "description": "Interchange Key as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
    "fieldname": "intrl_key_encrypted",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "Interchange Key — Encrypted"
   },
   {
    "description": "Sign Key as an AES/Base64-encrypted blob. Fill in either this or the matching Decrypted field on the left — saving fills in the other one automatically.",
    "fieldname": "sign_key_encrypted",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "Sign Key — Encrypted"
   },
   {
@@ -205,21 +205,21 @@
    "label": "API Key"
   },
   {
-   "description": "OAuth/API secret used to authenticate with KRA eTIMS. Stored encrypted via Frappe's Password fieldtype.",
+   "description": "OAuth/API secret used to authenticate with KRA eTIMS.",
    "fieldname": "api_secret",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "API Secret"
   },
   {
-   "description": "PIN for the control unit, stored encrypted.",
+   "description": "PIN for the control unit.",
    "fieldname": "control_unit_pin",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "Control Unit PIN"
   },
   {
-   "description": "Cached bearer/auth token returned by the KRA eTIMS auth endpoint, stored encrypted so requests can reuse it instead of re-authenticating every call.",
+   "description": "Cached bearer/auth token returned by the KRA eTIMS auth endpoint, so requests can reuse it instead of re-authenticating every call. Small Text (not Data) since bearer tokens can run well past 140 characters.",
    "fieldname": "cached_auth_token",
-   "fieldtype": "Password",
+   "fieldtype": "Small Text",
    "label": "Cached Auth Token"
   },
   {
@@ -234,9 +234,9 @@
    "label": "Encryption Key"
   },
   {
-   "description": "AES-128 key (hex) used to decrypt/encrypt the SDC ID, Device Serial Number, MRC No, CMC Key, Interchange Key, and Sign Key pairs above (scheme: AES/ECB/PKCS5Padding, Base64). Required whenever one of those pairs needs syncing on save. Stored encrypted.",
+   "description": "AES-128 key (hex) used to decrypt/encrypt the SDC ID, Device Serial Number, MRC No, CMC Key, Interchange Key, and Sign Key pairs above (scheme: AES/ECB/PKCS5Padding, Base64). Required whenever one of those pairs needs syncing on save.",
    "fieldname": "aes_key",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "AES Key"
   },
   {

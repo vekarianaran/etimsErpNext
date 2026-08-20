@@ -15,15 +15,6 @@ PAIR_FIELDS = [
 	("sign_key", "sign_key_encrypted"),
 ]
 
-PASSWORD_FIELDNAMES = {
-	"cmc_key",
-	"cmc_key_encrypted",
-	"intrl_key",
-	"intrl_key_encrypted",
-	"sign_key",
-	"sign_key_encrypted",
-}
-
 
 class eTIMSSettings(Document):
 	def validate(self):
@@ -52,7 +43,7 @@ class eTIMSSettings(Document):
 				continue
 
 			if aes_key is None:
-				aes_key = self.get_password("aes_key", raise_exception=False)
+				aes_key = self.aes_key
 				if not aes_key:
 					frappe.throw(frappe._("AES Key is required to sync encrypted/decrypted eTIMS values."))
 
@@ -63,8 +54,6 @@ class eTIMSSettings(Document):
 
 	def _field_value(self, fieldname, doc=None):
 		target = doc or self
-		if fieldname in PASSWORD_FIELDNAMES:
-			return target.get_password(fieldname, raise_exception=False) or ""
 		return target.get(fieldname) or ""
 
 	def _decrypt(self, fieldname, value, aes_key):

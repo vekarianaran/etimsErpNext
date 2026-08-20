@@ -60,24 +60,21 @@ class TestETIMSSettings(FrappeTestCase):
 
 		self.assertEqual(settings.sdc_id, "FAKESDC0001")
 
-	def test_decrypted_password_field_populates_encrypted_companion(self):
+	def test_decrypted_cmc_key_field_populates_encrypted_companion(self):
 		settings = frappe.get_single("eTIMS Settings")
 		settings.aes_key = FAKE_AES_KEY_HEX
 		settings.cmc_key = "FAKECMCKEY"
 		settings.save()
 
-		self.assertEqual(
-			settings.get_password("cmc_key_encrypted", raise_exception=False),
-			encrypt_value("FAKECMCKEY", FAKE_AES_KEY_HEX),
-		)
+		self.assertEqual(settings.cmc_key_encrypted, encrypt_value("FAKECMCKEY", FAKE_AES_KEY_HEX))
 
-	def test_encrypted_password_field_populates_decrypted_companion(self):
+	def test_encrypted_cmc_key_field_populates_decrypted_companion(self):
 		settings = frappe.get_single("eTIMS Settings")
 		settings.aes_key = FAKE_AES_KEY_HEX
 		settings.cmc_key_encrypted = encrypt_value("FAKECMCKEY", FAKE_AES_KEY_HEX)
 		settings.save()
 
-		self.assertEqual(settings.get_password("cmc_key", raise_exception=False), "FAKECMCKEY")
+		self.assertEqual(settings.cmc_key, "FAKECMCKEY")
 
 	def test_conflicting_pair_edit_encrypted_wins(self):
 		settings = frappe.get_single("eTIMS Settings")
@@ -111,3 +108,13 @@ class TestETIMSSettings(FrappeTestCase):
 
 		for removed in ("device_mode", "key_input_format", "keystore_alias", "keystore_password"):
 			self.assertNotIn(removed, fieldnames)
+
+	def test_no_password_fieldtype_fields_remain(self):
+		# Password fields route through Frappe's site-level encryption_key, which
+		# is separate infrastructure from our own aes_key and was the cause of a
+		# "Encryption key is in invalid format!" error unrelated to the AES Key
+		# value itself. None of this doctype's fields should be Password anymore.
+		meta = frappe.get_meta("eTIMS Settings")
+		password_fields = [f.fieldname for f in meta.fields if f.fieldtype == "Password"]
+
+		self.assertEqual(password_fields, [])
