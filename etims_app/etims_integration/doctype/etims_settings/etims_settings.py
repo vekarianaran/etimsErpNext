@@ -21,35 +21,47 @@ class eTIMSSettings(Document):
 		self.sync_encrypted_decrypted_pairs()
 
 	def sync_encrypted_decrypted_pairs(self):
-		"""Whichever field in a decrypted/encrypted pair was just edited,
-		compute the other one. If both were edited in the same save, the
-		encrypted field wins (it's treated as the value coming in from
-		KRA/the keystore)."""
+		"""Whichever side of a decrypted/encrypted pair is empty, compute it
+		from whichever side has a value — no history lookup needed for the
+		common case. If both sides already have values, fall back to diffing
+		against the last save to see which one was just edited; if the
+		encrypted side changed (or both did), it wins (it's treated as the
+		value coming in from KRA/the keystore)."""
 		before = self.get_doc_before_save()
 		aes_key = None
 
 		for decrypted_field, encrypted_field in PAIR_FIELDS:
 			new_decrypted = self._field_value(decrypted_field)
 			new_encrypted = self._field_value(encrypted_field)
-			old_decrypted = self._field_value(decrypted_field, before) if before else ""
-			old_encrypted = self._field_value(encrypted_field, before) if before else ""
 
-			decrypted_changed = new_decrypted != old_decrypted
-			encrypted_changed = new_encrypted != old_encrypted
-
-			if not decrypted_changed and not encrypted_changed:
-				continue
 			if not new_decrypted and not new_encrypted:
 				continue
+
+			if new_decrypted and not new_encrypted:
+				direction = "encrypt"
+			elif new_encrypted and not new_decrypted:
+				direction = "decrypt"
+			else:
+				old_decrypted = self._field_value(decrypted_field, before) if before else ""
+				old_encrypted = self._field_value(encrypted_field, before) if before else ""
+				decrypted_changed = new_decrypted != old_decrypted
+				encrypted_changed = new_encrypted != old_encrypted
+
+				if encrypted_changed:
+					direction = "decrypt"
+				elif decrypted_changed:
+					direction = "encrypt"
+				else:
+					continue
 
 			if aes_key is None:
 				aes_key = self.aes_key
 				if not aes_key:
 					frappe.throw(frappe._("AES Key is required to sync encrypted/decrypted eTIMS values."))
 
-			if encrypted_changed:
+			if direction == "decrypt":
 				self.set(decrypted_field, self._decrypt(encrypted_field, new_encrypted, aes_key))
-			elif decrypted_changed:
+			else:
 				self.set(encrypted_field, self._encrypt(decrypted_field, new_decrypted, aes_key))
 
 	def _field_value(self, fieldname, doc=None):

@@ -29,13 +29,6 @@
   "section_api",
   "sandbox_base_url",
   "production_base_url",
-  "column_break_api",
-  "client_id",
-  "api_key",
-  "api_secret",
-  "control_unit_pin",
-  "cached_auth_token",
-  "token_expires_at",
   "section_encryption",
   "aes_key",
   "section_retry",
@@ -189,44 +182,6 @@
    "fieldname": "production_base_url",
    "fieldtype": "Data",
    "label": "Production Base URL"
-  },
-  {
-   "fieldname": "column_break_api",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "client_id",
-   "fieldtype": "Data",
-   "label": "Client ID"
-  },
-  {
-   "fieldname": "api_key",
-   "fieldtype": "Data",
-   "label": "API Key"
-  },
-  {
-   "description": "OAuth/API secret used to authenticate with KRA eTIMS.",
-   "fieldname": "api_secret",
-   "fieldtype": "Data",
-   "label": "API Secret"
-  },
-  {
-   "description": "PIN for the control unit.",
-   "fieldname": "control_unit_pin",
-   "fieldtype": "Data",
-   "label": "Control Unit PIN"
-  },
-  {
-   "description": "Cached bearer/auth token returned by the KRA eTIMS auth endpoint, so requests can reuse it instead of re-authenticating every call. Small Text (not Data) since bearer tokens can run well past 140 characters.",
-   "fieldname": "cached_auth_token",
-   "fieldtype": "Small Text",
-   "label": "Cached Auth Token"
-  },
-  {
-   "description": "Expiry timestamp of the cached auth token. Used to decide whether to refresh the token before the next API call.",
-   "fieldname": "token_expires_at",
-   "fieldtype": "Datetime",
-   "label": "Token Expires At"
   },
   {
    "fieldname": "section_encryption",

@@ -76,6 +76,20 @@ class TestETIMSSettings(FrappeTestCase):
 
 		self.assertEqual(settings.cmc_key, "FAKECMCKEY")
 
+	def test_decrypted_only_field_encrypts_even_without_before_state(self):
+		# Regression test: sync must not depend on get_doc_before_save() diffing
+		# for the common "only one side has a value" case, since that before-doc
+		# lookup is fragile for a Single DocType's first real save.
+		settings = frappe.get_single("eTIMS Settings")
+		settings.aes_key = FAKE_AES_KEY_HEX
+		settings.sdc_id = "FAKESDC0001"
+		settings.flags.ignore_version = True
+		settings._doc_before_save = None
+
+		settings.sync_encrypted_decrypted_pairs()
+
+		self.assertEqual(settings.sdc_id_encrypted, encrypt_value("FAKESDC0001", FAKE_AES_KEY_HEX))
+
 	def test_conflicting_pair_edit_encrypted_wins(self):
 		settings = frappe.get_single("eTIMS Settings")
 		settings.aes_key = FAKE_AES_KEY_HEX
@@ -106,7 +120,19 @@ class TestETIMSSettings(FrappeTestCase):
 		meta = frappe.get_meta("eTIMS Settings")
 		fieldnames = {f.fieldname for f in meta.fields}
 
-		for removed in ("device_mode", "key_input_format", "keystore_alias", "keystore_password"):
+		for removed in (
+			"device_mode",
+			"key_input_format",
+			"keystore_alias",
+			"keystore_password",
+			"client_id",
+			"api_key",
+			"api_secret",
+			"control_unit_pin",
+			"cached_auth_token",
+			"token_expires_at",
+			"column_break_api",
+		):
 			self.assertNotIn(removed, fieldnames)
 
 	def test_no_password_fieldtype_fields_remain(self):
