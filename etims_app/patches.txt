@@ -2,3 +2,4 @@
 
 [post_model_sync]
 etims_app.patches.v1_0.seed_etims_api_endpoints
+etims_app.patches.v1_0.update_etims_api_endpoint_templates

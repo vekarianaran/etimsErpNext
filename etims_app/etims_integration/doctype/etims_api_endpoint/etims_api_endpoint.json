@@ -14,10 +14,11 @@
   "request_fields",
   "response_fields",
   "section_erpnext_wiring",
+  "is_enabled",
   "status",
   "triggering_doctype",
   "triggering_event",
-  "key_field_mapping",
+  "request_payload_template",
   "result_storage",
   "implementation_reference"
  ],
@@ -71,6 +72,13 @@
    "label": "ERPNext Wiring"
   },
   {
+   "default": "1",
+   "description": "Kill switch for this specific endpoint, independent of Status — when unchecked, no automatic or manual caller may invoke it, regardless of whether Status is Planned/Implemented.",
+   "fieldname": "is_enabled",
+   "fieldtype": "Check",
+   "label": "Is Enabled"
+  },
+  {
    "default": "Documented",
    "description": "`Documented` = KRA protocol known, no ERPNext-side plan yet. `Planned` = wiring designed but not yet implemented in code. `Implemented` = live in code today.",
    "fieldname": "status",
@@ -92,10 +100,11 @@
    "label": "Triggering Event"
   },
   {
-   "description": "ERPNext field → KRA field mapping (one per line). Blank until planned.",
-   "fieldname": "key_field_mapping",
+   "description": "Jinja-templated JSON object — the literal request body sent to KRA. Static values are literal; per-document values use `{{ doc.<field> }}`, settings-derived values use `{{ settings.<field> }}`. Fields with no ERPNext mapping decided yet use a generic placeholder variable (e.g. `{{ last_req_dt }}`) supplied by whichever function eventually calls this endpoint. Rendered via `frappe.render_template()` then `json.loads()` to build the real payload.",
+   "fieldname": "request_payload_template",
    "fieldtype": "Code",
-   "label": "Key Field Mapping"
+   "label": "Request Payload Template",
+   "options": "Jinja"
   },
   {
    "description": "Where the response/result of this call is persisted once implemented, e.g. doctype/field names.",

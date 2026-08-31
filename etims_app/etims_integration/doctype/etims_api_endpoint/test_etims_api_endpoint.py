@@ -1,6 +1,8 @@
 # Copyright (c) 2026, Naran Vekaria and contributors
 # For license information, please see license.txt
 
+import json
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
@@ -13,9 +15,10 @@ SAMPLE_RESPONSE_FIELDS = """resultCd: Data
 resultMsg: Data
 resultDt: Data"""
 
-SAMPLE_KEY_FIELD_MAPPING = """item_code -> itemCd
-item_name -> itemNm
-company -> tin"""
+SAMPLE_REQUEST_PAYLOAD_TEMPLATE = """{
+	"itemCd": "{{ doc.item_code }}",
+	"itemNm": "{{ doc.item_name }}"
+}"""
 
 
 class TestETIMSAPIEndpoint(FrappeTestCase):
@@ -34,10 +37,11 @@ class TestETIMSAPIEndpoint(FrappeTestCase):
 			"required_headers": "Content-Type, Authorization",
 			"request_fields": SAMPLE_REQUEST_FIELDS,
 			"response_fields": SAMPLE_RESPONSE_FIELDS,
+			"is_enabled": 1,
 			"status": "Planned",
 			"triggering_doctype": "Item",
 			"triggering_event": "on_update",
-			"key_field_mapping": SAMPLE_KEY_FIELD_MAPPING,
+			"request_payload_template": SAMPLE_REQUEST_PAYLOAD_TEMPLATE,
 			"result_storage": "eTIMS Submission Log.response_payload",
 			"implementation_reference": "etims_app.etims_integration.item_submission.submit_item_to_kra",
 		}
@@ -58,15 +62,43 @@ class TestETIMSAPIEndpoint(FrappeTestCase):
 		self.assertEqual(reloaded.required_headers, "Content-Type, Authorization")
 		self.assertEqual(reloaded.request_fields, SAMPLE_REQUEST_FIELDS)
 		self.assertEqual(reloaded.response_fields, SAMPLE_RESPONSE_FIELDS)
+		self.assertEqual(reloaded.is_enabled, 1)
 		self.assertEqual(reloaded.status, "Planned")
 		self.assertEqual(reloaded.triggering_doctype, "Item")
 		self.assertEqual(reloaded.triggering_event, "on_update")
-		self.assertEqual(reloaded.key_field_mapping, SAMPLE_KEY_FIELD_MAPPING)
+		self.assertEqual(reloaded.request_payload_template, SAMPLE_REQUEST_PAYLOAD_TEMPLATE)
 		self.assertEqual(reloaded.result_storage, "eTIMS Submission Log.response_payload")
 		self.assertEqual(
 			reloaded.implementation_reference,
 			"etims_app.etims_integration.item_submission.submit_item_to_kra",
 		)
+
+	def test_is_enabled_defaults_to_true(self):
+		doc = frappe.get_doc(
+			{
+				"doctype": "eTIMS API Endpoint",
+				"endpoint_path": "saveItemDefaultEnabled",
+				"http_method": "POST",
+			}
+		)
+		doc.insert(ignore_permissions=True)
+
+		self.assertEqual(doc.is_enabled, 1)
+
+	def test_request_payload_template_renders_to_valid_json(self):
+		# This is the whole point of the fix this doctype went through: the
+		# field must be genuinely executable (Jinja -> render -> json.loads),
+		# not just descriptive text a human has to interpret.
+		doc = self._new_endpoint(endpoint_path="saveItemTemplateRender")
+		item = frappe.get_doc(
+			{"doctype": "Item", "item_code": "TEST-ETIMS-ITEM", "item_name": "Test eTIMS Item"}
+		)
+
+		rendered = frappe.render_template(doc.request_payload_template, {"doc": item})
+		payload = json.loads(rendered)
+
+		self.assertEqual(payload["itemCd"], "TEST-ETIMS-ITEM")
+		self.assertEqual(payload["itemNm"], "Test eTIMS Item")
 
 	def test_status_defaults_to_documented(self):
 		# Omit `status` entirely (rather than setting it then clearing it) so
