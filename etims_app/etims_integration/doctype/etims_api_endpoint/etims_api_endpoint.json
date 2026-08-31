@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "autoname": "field:endpoint_path",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "System",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_kra_protocol",
+  "endpoint_path",
+  "http_method",
+  "purpose",
+  "required_headers",
+  "request_fields",
+  "response_fields",
+  "section_erpnext_wiring",
+  "status",
+  "triggering_doctype",
+  "triggering_event",
+  "key_field_mapping",
+  "result_storage",
+  "implementation_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_kra_protocol",
+   "fieldtype": "Section Break",
+   "label": "KRA Protocol"
+  },
+  {
+   "description": "KRA eTIMS endpoint path, no leading slash (e.g. `saveItem`).",
+   "fieldname": "endpoint_path",
+   "fieldtype": "Data",
+   "label": "Endpoint Path",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "POST",
+   "fieldname": "http_method",
+   "fieldtype": "Select",
+   "label": "HTTP Method",
+   "options": "GET\nPOST"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
+  },
+  {
+   "description": "Comma-separated required HTTP headers, or `none` for the header-less init calls.",
+   "fieldname": "required_headers",
+   "fieldtype": "Data",
+   "label": "Required Headers"
+  },
+  {
+   "description": "Raw KRA request field list/schema, as documented in the VSDC API reference.",
+   "fieldname": "request_fields",
+   "fieldtype": "Code",
+   "label": "Request Fields"
+  },
+  {
+   "description": "Raw KRA response field list/schema, as documented in the VSDC API reference.",
+   "fieldname": "response_fields",
+   "fieldtype": "Code",
+   "label": "Response Fields"
+  },
+  {
+   "fieldname": "section_erpnext_wiring",
+   "fieldtype": "Section Break",
+   "label": "ERPNext Wiring"
+  },
+  {
+   "default": "Documented",
+   "description": "`Documented` = KRA protocol known, no ERPNext-side plan yet. `Planned` = wiring designed but not yet implemented in code. `Implemented` = live in code today.",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Documented\nPlanned\nImplemented"
+  },
+  {
+   "description": "Which ERPNext doctype's save/submit event triggers this call. Blank until a wiring plan exists.",
+   "fieldname": "triggering_doctype",
+   "fieldtype": "Link",
+   "label": "Triggering Doctype",
+   "options": "DocType"
+  },
+  {
+   "description": "e.g. `on_update`, `on_submit`. Blank until planned.",
+   "fieldname": "triggering_event",
+   "fieldtype": "Data",
+   "label": "Triggering Event"
+  },
+  {
+   "description": "ERPNext field → KRA field mapping (one per line). Blank until planned.",
+   "fieldname": "key_field_mapping",
+   "fieldtype": "Code",
+   "label": "Key Field Mapping"
+  },
+  {
+   "description": "Where the response/result of this call is persisted once implemented, e.g. doctype/field names.",
+   "fieldname": "result_storage",
+   "fieldtype": "Small Text",
+   "label": "Result Storage"
+  },
+  {
+   "description": "Python module/function path that implements this call, once `status = Implemented`. e.g. `etims_app.etims_integration.item_submission.submit_item_to_kra`.",
+   "fieldname": "implementation_reference",
+   "fieldtype": "Data",
+   "label": "Implementation Reference"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-31 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "eTIMS Integration",
+ "name": "eTIMS API Endpoint",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

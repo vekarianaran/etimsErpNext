@@ -7,5 +7,9 @@
 // logic in two places.
 
 frappe.ui.form.on("eTIMS Settings", {
-	refresh(frm) {},
+	refresh(frm) {
+		frm.add_custom_button(__("View KRA API Endpoint Reference"), () => {
+			frappe.set_route("List", "eTIMS API Endpoint");
+		});
+	},
 });
