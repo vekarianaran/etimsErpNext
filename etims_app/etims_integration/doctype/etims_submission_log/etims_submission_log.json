@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "System",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_reference",
+  "reference_doctype",
+  "reference_name",
+  "submission_type",
+  "section_status",
+  "status",
+  "attempt_count",
+  "next_retry_at",
+  "section_payload",
+  "idempotency_key",
+  "request_payload",
+  "response_payload",
+  "error_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_reference",
+   "fieldtype": "Section Break",
+   "label": "Reference"
+  },
+  {
+   "description": "The ERPNext DocType this submission log entry relates to (e.g. `Item` for item registration submissions to KRA eTIMS). More DocTypes will be added to this list as later milestones wire up Sales Invoice and other submissions.",
+   "fieldname": "reference_doctype",
+   "fieldtype": "Select",
+   "label": "Reference Doctype",
+   "options": "Item"
+  },
+  {
+   "description": "Link to the specific document (of the type named in Reference Doctype) that this submission log entry tracks.",
+   "fieldname": "reference_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Name",
+   "options": "reference_doctype"
+  },
+  {
+   "description": "The kind of eTIMS submission this log entry represents (e.g. `Item Registration`). More submission types will be added as later milestones add Sales Invoice/credit note submissions.",
+   "fieldname": "submission_type",
+   "fieldtype": "Select",
+   "label": "Submission Type",
+   "options": "Item Registration"
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Pending",
+   "description": "Current state of this submission attempt. Transitions between these states are driven by future retry/scheduler logic — not wired up yet in this milestone.",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nWaiting\nRetrying\nSuccess\nFailed"
+  },
+  {
+   "default": "0",
+   "description": "Number of submission attempts made so far for this log entry. Incremented by future retry logic — not wired up yet in this milestone.",
+   "fieldname": "attempt_count",
+   "fieldtype": "Int",
+   "label": "Attempt Count"
+  },
+  {
+   "description": "Timestamp at which a future retry scheduler should next attempt this submission. Not consumed by any scheduler yet in this milestone.",
+   "fieldname": "next_retry_at",
+   "fieldtype": "Datetime",
+   "label": "Next Retry At"
+  },
+  {
+   "fieldname": "section_payload",
+   "fieldtype": "Section Break",
+   "label": "Payload"
+  },
+  {
+   "description": "Unique key used to prevent duplicate submissions to KRA eTIMS for the same logical request. Exact format (e.g. a hash of payload plus reference) is decided in a later milestone; for now this field only enforces uniqueness at the database level.",
+   "fieldname": "idempotency_key",
+   "fieldtype": "Data",
+   "label": "Idempotency Key",
+   "unique": 1
+  },
+  {
+   "description": "Raw JSON payload sent to KRA eTIMS for this submission (read-only; populated by future submission logic).",
+   "fieldname": "request_payload",
+   "fieldtype": "Code",
+   "label": "Request Payload",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "description": "Raw JSON payload received back from KRA eTIMS for this submission (read-only; populated by future submission logic).",
+   "fieldname": "response_payload",
+   "fieldtype": "Code",
+   "label": "Response Payload",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "description": "Human-readable error detail captured if this submission failed, for debugging and display in the log list.",
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "Error Message"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-08-31 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "eTIMS Integration",
+ "name": "eTIMS Submission Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
