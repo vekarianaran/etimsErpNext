@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"etims_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>eTIMS Integration</b></span>\",\"col\":12}},{\"id\":\"etims_settings_shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTIMS Settings\",\"col\":3}}]",
+ "content": "[{\"id\":\"etims_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>eTIMS Integration</b></span>\",\"col\":12}},{\"id\":\"etims_settings_shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTIMS Settings\",\"col\":3}},{\"id\":\"etims_submission_log_shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTIMS Submission Log\",\"col\":3}},{\"id\":\"etims_api_endpoint_shortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTIMS API Endpoint\",\"col\":3}}]",
  "creation": "2026-08-19 00:00:00.000000",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -32,6 +32,20 @@
    "doc_view": "",
    "label": "eTIMS Settings",
    "link_to": "eTIMS Settings",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "eTIMS Submission Log",
+   "link_to": "eTIMS Submission Log",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "eTIMS API Endpoint",
+   "link_to": "eTIMS API Endpoint",
    "type": "DocType"
   }
  ],
